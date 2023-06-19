@@ -1,0 +1,9 @@
+/node_modules
+/database
+
+/ui/node_modules
+/server/successOdd.log
+
+# vscode
+.vscode
+.DS_Store

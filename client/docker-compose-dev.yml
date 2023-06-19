@@ -1,0 +1,12 @@
+version: "3"
+services:
+  app:
+    container_name: xbet-client-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - ./:/usr/src/app
+    environment:
+      - API_URL=http://192.168.0.100:3000
+    command: "sh -c 'npm start'"

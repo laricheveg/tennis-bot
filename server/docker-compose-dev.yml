@@ -1,0 +1,30 @@
+version: "3"
+services:
+  app:
+    container_name: xbet-server-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    links:
+      - db
+    environment:
+      - NODE_ENV=dev
+      - LOGGER=docker
+    command: "sh -c 'npm run migrate:latest-dev && npm start'"
+    ports:
+      - 3000:3000
+  
+  db:
+    container_name: xbet-db-dev
+    image: postgres:10-alpine
+    # volumes:
+    #   - ./database/postgres_dev:/data/postgres_dev
+    environment:
+      - POSTGRES_DB=xbet-dev-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432

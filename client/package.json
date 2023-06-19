@@ -1,0 +1,29 @@
+{
+  "name": "memes_bot",
+  "version": "1.0.0",
+  "description": "bot for parsing memes",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app/index.js",
+    "lint": "eslint .",
+    "dev": "nodemon app/index.js"
+  },
+  "author": "BroCompany",
+  "license": "ISC",
+  "dependencies": {
+    "common-tags": "^1.8.0",
+    "config": "^3.0.1",
+    "node-fetch": "^2.3.0",
+    "node-telegram-bot-api": "^0.30.0",
+    "serialize-array": "0.0.1",
+    "serialize-javascript": "^5.0.1",
+    "socket.io-client": "^2.2.0",
+    "socks5-https-client": "^1.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "nodemon": "^1.18.9"
+  }
+}

@@ -1,0 +1,276 @@
+// process messages
+bot.on('message', (msg) => {
+  const { id } = msg.chat;
+  const userText = msg.text.toLowerCase();
+
+  switch (userText) {
+
+    case 'html':
+    {
+      const html = stripIndent`
+        <strong>Hello, ${ msg.from.first_name } !!!</strong>
+        <i>it's subtext</i>
+        <pre>
+          lorem ipsum ...
+        </pre>
+      `;
+      bot.sendMessage(id, html, { parse_mode: 'HTML'});
+      break;
+    }
+
+    case 'markdown':
+    {
+      const markdown = stripIndent`
+        *Hello, ${ msg.from.first_name } !!!*
+        _Italic text_
+      `;
+      bot.sendMessage(id, markdown, { parse_mode: 'Markdown'});
+      break;
+    }
+
+    case 'link':
+    {
+      bot.sendMessage(id, `https://core.telegram.org/bots/api#markdown-style`, {
+        disable_web_page_preview: true,
+        disable_notification: false
+      });
+      break;
+    }
+
+    case 'timeout':
+    {
+      setTimeout(() => {
+        bot.sendMessage(id, 'new message');
+      }, 4000);
+      break;
+    }
+
+    case 'keyboard':
+    {
+      bot.sendMessage(id, 'Custom keyboard', {
+        reply_markup: {
+          keyboard: [
+            [{
+              text: 'Send geolocation',
+              request_location: true
+            }],
+            ['Reply', 'Close'],
+            [{
+              text: 'Send contact',
+              request_contact: true
+            }]          
+          ],
+          one_time_keyboard: true
+        }
+      });
+      break;
+    }
+
+    case 'inline':
+    {
+      bot.sendMessage(id, 'Inline keyboard', {
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: 'Google',
+                url: 'https://www.google.com'
+              }
+            ],
+            [
+              {
+                text: 'Forward',
+                callback_data: 'forward'
+              },
+              {
+                text: 'Reply',
+                callback_data: 'reply'
+              }
+            ]
+          ]
+        }
+      });
+      break;
+    }
+
+    case 'close':
+    {
+      bot.sendMessage(id, 'Action: close keyboard', {
+        reply_markup: { remove_keyboard: true }
+      });
+      break;
+    }
+
+    case 'reply':
+    {
+      bot.sendMessage(id, 'Action: reply message', {
+        reply_markup: { force_reply: true }
+      });
+      break;
+    }
+
+    default:
+    {
+      bot.sendMessage(id, '404 - not found :(');
+      break;
+    }
+      
+  }
+  
+});
+
+
+// inline query
+bot.on('inline_query', query => {
+
+  const results = [];
+
+  for (let i = 0; i < 5; i++) {
+    results.push({
+      type: 'article',
+      id: i.toString(),
+      title: `Title ${i}`,
+      input_message_content: {
+        message_text: `Article #${i}`
+      }
+    });
+  }
+
+  bot.answerInlineQuery(query.id, results, {
+    cache_time: 0
+  });
+
+});
+
+// callback query
+bot.on('callback_query', (query) => {
+
+  console.log('\n\t ---> callback query');
+  // bot.sendMessage(query.message.chat.id, helper.debug(query));
+
+  bot.answerCallbackQuery(query.id, `${ query.data }`);
+});
+
+// process commands
+bot.onText(/\/start/, (msg) => {
+  const { id } = msg.chat;
+
+  bot.sendMessage(id, helper.debug(msg));
+});
+
+bot.onText(/\/help (.+)/, (msg, [source, match]) => {
+  const { id } = msg.chat;
+
+  bot.sendMessage(id, helper.debug(match));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // bot.sendMessage(id, MESSAGE_TEXT.CHOOSE_ACTION, {
+  //   reply_markup: {
+  //     inline_keyboard: [
+  //       // line 1
+  //       [
+  //         {
+  //           text: BUTTON_TEXT.ENABLE,
+  //           callback_data: CALLBACK_DATA.ENABLE_STRATEGY,
+  //         },
+  //         {
+  //           text: BUTTON_TEXT.DISABLE,
+  //           callback_data: CALLBACK_DATA.DISABLE_STRATEGY,
+  //         },
+  //       ],
+  //       // line 2
+  //       [
+  //         {
+  //           text: BUTTON_TEXT.SHOW_ALL_STRATEGIES,
+  //           callback_data: CALLBACK_DATA.LIST_OF_STRATEGIES,
+  //         },
+  //       ]
+  //       //
+  //     ]
+  //   }
+  // });
+
+
+
+// CALLBACK QUERY //
+
+bot.on('callback_query', (query) => {
+  const {
+    from: { id: userId },
+    data: userCallBack,
+  } = query;
+
+  switch (userCallBack) {
+
+    case CALLBACK_DATA.ENABLE_STRATEGY:
+      bot.sendMessage(userId, DIALOG_TEXT.WHICH_ENABLE, {
+        reply_markup: {
+          inline_keyboard: helper.convertStrategiesToInlineKeyboard(
+            MOCK_STRATEGIES.filter(el => el.enabled === false)
+          )
+        }
+      });
+      break;
+
+    case CALLBACK_DATA.DISABLE_STRATEGY:
+      bot.sendMessage(userId, DIALOG_TEXT.WHICH_DISABLE, {
+        reply_markup: {
+          inline_keyboard: helper.convertStrategiesToInlineKeyboard(
+            MOCK_STRATEGIES.filter(el => el.enabled === true)
+          )
+        }
+      });
+      break;
+
+    case CALLBACK_DATA.LIST_OF_STRATEGIES:
+      const str_list = helper.printStrategies(MOCK_STRATEGIES);
+      bot.sendMessage(userId, stripIndent`
+        ${MESSAGE_TEXT.LIST_OF_STRATEGIES}
+        ${str_list}
+      `);
+      break;
+
+    default:
+      // console.error('Error in callback data !!!');
+      bot.sendMessage(userId, userCallBack);
+      break;
+
+  };
+
+});

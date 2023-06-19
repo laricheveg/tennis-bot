@@ -1,0 +1,13 @@
+{
+  "settings": {
+    "api-key_dev": "6188096979:AAE03Y5GWf-z_Lnr-ZSYMELdk7ee6AXxsYY",
+    "api-key": "6188096979:AAE03Y5GWf-z_Lnr-ZSYMELdk7ee6AXxsYY",
+    "server": "http://localhost:3000",
+    "proxy-url": "http://95.179.199.155:8080"
+  },
+  "strategies": {
+    "str84": "Страгегия 'Никто не забьет' "
+  }
+}
+
+

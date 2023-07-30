@@ -14,7 +14,7 @@ async function mirrorButtonClick(req, res) {
     const { buttonId } = req.params;
 
       replay.successWithData(res, 'Button', buttonId);
-      signal('Button'+ (TABLE_LOOKUP[buttonId] ? TABLE_LOOKUP[buttonId] :  buttonId))
+      signal('Command: '+ (TABLE_LOOKUP[buttonId] ? TABLE_LOOKUP[buttonId] :  buttonId))
       console.log('Была нажата кнопка ', buttonId)
     } catch (err) {
       // eslint-disable-next-line
